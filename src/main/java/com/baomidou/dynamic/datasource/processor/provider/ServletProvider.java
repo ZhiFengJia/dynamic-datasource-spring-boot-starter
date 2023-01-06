@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baomidou.dynamic.datasource.provider;
+package com.baomidou.dynamic.datasource.processor.provider;
 
 /**
  * @author: miaozf
- * @Date: 2022-05-27
  * @Description: javax.servlet 和 jakarta.servlet 兼容
  */
-
 public interface ServletProvider {
 
     /**
      * 获取参数值
+     *
      * @param name
      * @return
      */
@@ -32,6 +31,7 @@ public interface ServletProvider {
 
     /**
      * 获取参数值
+     *
      * @param name
      * @param defaultValue 默认值
      * @return
@@ -40,6 +40,7 @@ public interface ServletProvider {
 
     /**
      * 获取参数值
+     *
      * @param name
      * @return
      */
@@ -47,6 +48,7 @@ public interface ServletProvider {
 
     /**
      * 获取参数值
+     *
      * @param name
      * @param defaultValue 默认值
      * @return
@@ -55,6 +57,7 @@ public interface ServletProvider {
 
     /**
      * header获取参数值
+     *
      * @param name
      * @return
      */
@@ -62,6 +65,7 @@ public interface ServletProvider {
 
     /**
      * header获取参数值
+     *
      * @param name
      * @param defaultValue
      * @return
@@ -70,6 +74,7 @@ public interface ServletProvider {
 
     /**
      * session获取参数值
+     *
      * @param name
      * @return
      */
@@ -77,6 +82,7 @@ public interface ServletProvider {
 
     /**
      * session获取参数值
+     *
      * @param name
      * @param defaultValue
      * @return

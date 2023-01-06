@@ -17,9 +17,13 @@ package com.baomidou.dynamic.datasource.processor.jakarta;
 
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.SneakyThrows;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.lang.reflect.Method;
 
 
 /**
@@ -33,14 +37,26 @@ public class DsJakartaSessionProcessor extends DsProcessor {
      */
     private static final String SESSION_PREFIX = "#session";
 
+    private static final Method GET_REQUEST_METHOD;
+
+    static {
+        try {
+            GET_REQUEST_METHOD=ServletRequestAttributes.class.getDeclaredMethod("getRequest");
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public boolean matches(String key) {
         return key.startsWith(SESSION_PREFIX);
     }
 
+    @SneakyThrows
     @Override
     public String doDetermineDatasource(MethodInvocation invocation, String key) {
-        HttpServletRequest request = (HttpServletRequest) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        return request.getSession().getAttribute(key.substring(9)).toString();
+            Object invoke = GET_REQUEST_METHOD.invoke(RequestContextHolder.getRequestAttributes());
+            HttpServletRequest request = (HttpServletRequest) invoke;
+            return request.getSession().getAttribute(key.substring(9)).toString();
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baomidou.dynamic.datasource.provider;
+package com.baomidou.dynamic.datasource.processor.provider;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  */
 @Order(200)
 @Component
-@ConditionalOnMissingBean(value = DefaultServletProvider.class)
+@ConditionalOnMissingBean(value = JavaxServletProvider.class)
 @ConditionalOnClass({HttpServletRequest.class})
 @RequiredArgsConstructor
 public class JakartaServletProvider implements ServletProvider {
@@ -38,6 +38,20 @@ public class JakartaServletProvider implements ServletProvider {
     private final HttpServletRequest request;
 
     private final HttpServletResponse response;
+
+    public static String toStr(Object value) {
+        return toStr(value, null);
+    }
+
+    public static String toStr(Object value, String defaultValue) {
+        if (null == value) {
+            return defaultValue;
+        }
+        if (value instanceof String) {
+            return (String) value;
+        }
+        return value.toString();
+    }
 
     @Override
     public String getParameter(String name) {
@@ -66,7 +80,7 @@ public class JakartaServletProvider implements ServletProvider {
 
     @Override
     public String getHeader(String name, String defaultValue) {
-        return toStr(request.getHeader(name) , defaultValue);
+        return toStr(request.getHeader(name), defaultValue);
     }
 
     @Override
@@ -76,25 +90,7 @@ public class JakartaServletProvider implements ServletProvider {
 
     @Override
     public String getSessionAttribute(String name, String defaultValue) {
-        return toStr(request.getSession().getAttribute(name) , defaultValue);
-    }
-
-    public static String toStr(Object value)
-    {
-        return toStr(value, null);
-    }
-
-    public static String toStr(Object value, String defaultValue)
-    {
-        if (null == value)
-        {
-            return defaultValue;
-        }
-        if (value instanceof String)
-        {
-            return (String) value;
-        }
-        return value.toString();
+        return toStr(request.getSession().getAttribute(name), defaultValue);
     }
 
 }

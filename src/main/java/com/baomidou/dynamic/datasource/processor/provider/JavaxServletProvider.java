@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baomidou.dynamic.datasource.provider;
+package com.baomidou.dynamic.datasource.processor.provider;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -29,14 +29,26 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @author: miaozf
- * @Date: 2022-05-27
- * @Description:
  */
 @Slf4j
 @Order(100)
 @Component
 @ConditionalOnClass({HttpServletRequest.class})
-public class DefaultServletProvider implements ServletProvider {
+public class JavaxServletProvider implements ServletProvider {
+
+    public static String toStr(Object value) {
+        return toStr(value, null);
+    }
+
+    public static String toStr(Object value, String defaultValue) {
+        if (null == value) {
+            return defaultValue;
+        }
+        if (value instanceof String) {
+            return (String) value;
+        }
+        return value.toString();
+    }
 
     @Override
     public String getParameter(String name) {
@@ -65,7 +77,7 @@ public class DefaultServletProvider implements ServletProvider {
 
     @Override
     public String getHeader(String name, String defaultValue) {
-        return toStr(this.getRequest().getHeader(name) , defaultValue);
+        return toStr(this.getRequest().getHeader(name), defaultValue);
     }
 
     @Override
@@ -75,9 +87,8 @@ public class DefaultServletProvider implements ServletProvider {
 
     @Override
     public String getSessionAttribute(String name, String defaultValue) {
-        return toStr(this.getRequest().getSession().getAttribute(name) , defaultValue);
+        return toStr(this.getRequest().getSession().getAttribute(name), defaultValue);
     }
-
 
     /**
      * 获取request
@@ -103,23 +114,5 @@ public class DefaultServletProvider implements ServletProvider {
     private ServletRequestAttributes getRequestAttributes() {
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         return (ServletRequestAttributes) attributes;
-    }
-
-    public static String toStr(Object value)
-    {
-        return toStr(value, null);
-    }
-
-    public static String toStr(Object value, String defaultValue)
-    {
-        if (null == value)
-        {
-            return defaultValue;
-        }
-        if (value instanceof String)
-        {
-            return (String) value;
-        }
-        return value.toString();
     }
 }
